@@ -11,7 +11,7 @@
     name: "{{ cadvisor_system_user }}"
     groups: "{{ cadvisor_system_group }}, docker"
     append: true
-    shell: /sbin/nologin
+    shell: /usr/sbin/nologin
     system: true
     create_home: true
     home: "{{ home_dir_cadvisor }}"
