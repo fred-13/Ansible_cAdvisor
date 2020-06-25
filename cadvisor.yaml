@@ -1,0 +1,4 @@
+---
+- hosts: cadvisor-nodes
+  roles:
+  - cadvisor

@@ -1,0 +1,49 @@
+---
+- name: Create the cAdvisor group
+  group:
+    name: "{{ cadvisor_system_group }}"
+    state: present
+    system: true
+  when: cadvisor_system_group != "root"
+
+- name: Create the cAdvisor user
+  user:
+    name: "{{ cadvisor_system_user }}"
+    groups: "{{ cadvisor_system_group }}, docker"
+    append: true
+    shell: /sbin/nologin
+    system: true
+    create_home: true
+    home: "{{ home_dir_cadvisor }}"
+  when: cadvisor_system_user != "root"
+
+- name: Copy certs-auth for user {{ cadvisor_system_user }}
+  copy:
+    src: "{{ certs_path }}/{{ item }}"
+    dest: "{{ home_dir_cadvisor }}"
+    owner: "{{ cadvisor_system_user }}"
+    group: "{{ cadvisor_system_group }}"
+    remote_src: yes
+    mode: u=rwx
+  with_items:
+    - "cert.pem"
+    - "key.pem"
+    - "ca.pem"
+  when: protect_docker_daemon_socket
+
+- name: Set ACL docker data dir for user {{ cadvisor_system_user }}
+  acl:
+    path: "{{ docker_data_dir }}"
+    entry: user:{{ cadvisor_system_user }}:r-x
+    recursive: yes
+    state: present
+  notify: restart cadvisor
+
+- name: Copy the Node cAdvisor systemd service file
+  template:
+    src: cadvisor.service.j2
+    dest: /etc/systemd/system/cadvisor.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart cadvisor

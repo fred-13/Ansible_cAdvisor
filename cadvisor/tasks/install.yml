@@ -1,0 +1,9 @@
+---
+- name: propagate locally distributed cadvisor binary
+  copy:
+    src: "cadvisor-{{ cadvisor_version }}"
+    dest: "{{ cadvisor_binary_dir }}/cadvisor"
+    mode: 0755
+    owner: root
+    group: root
+  when: cadvisor_binary_dir | length > 0

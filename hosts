@@ -1,0 +1,8 @@
+[all]
+cadvisor-1 ansible_host=192.168.123.11 ansible_user=root ip=192.168.123.11
+
+[cadvisor-nodes]
+cadvisor-1
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python

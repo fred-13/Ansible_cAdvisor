@@ -1,0 +1,28 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=CAdvisor MonAgent
+Requires=cadvisor.service
+After=networking.service
+
+[Service]
+User={{ cadvisor_system_user }}
+Group={{ cadvisor_system_group }}
+Restart=always
+{% if protect_docker_daemon_socket %}
+ExecStart=/bin/bash -c '{{ cadvisor_binary_dir }}/cadvisor \
+	--port={{ cadvisor_listen_port }} \
+	--docker="tcp://127.0.0.1:2376" \
+	--docker_only=true \
+	--docker-tls=true \
+	--docker-tls-cert="{{ home_dir_cadvisor }}/cert.pem" \
+	--docker-tls-key="{{ home_dir_cadvisor }}/key.pem" \
+	--docker-tls-ca="{{ home_dir_cadvisor }}/ca.pem"'
+{% else %}
+ExecStart=/bin/bash -c '{{ cadvisor_binary_dir }}/cadvisor \
+	--port={{ cadvisor_listen_port }} \
+	--docker_only=true'
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

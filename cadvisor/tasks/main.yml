@@ -1,0 +1,18 @@
+---
+- import_tasks: selinux.yml
+  become: true
+  when: ansible_selinux.status == "enabled"
+
+- import_tasks: install.yml
+  become: true
+
+- import_tasks: configure.yml
+  become: true
+
+- name: Ensure cAdvisor is enabled on boot
+  become: true
+  systemd:
+    daemon_reload: true
+    name: cadvisor
+    enabled: true
+    state: started

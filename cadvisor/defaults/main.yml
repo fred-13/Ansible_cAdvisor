@@ -1,0 +1,10 @@
+---
+cadvisor_version: 0.35.0
+cadvisor_listen_port: "8080"
+cadvisor_binary_dir: "/usr/bin"
+protect_docker_daemon_socket: true
+cadvisor_system_user: "cadvisor"
+cadvisor_system_group: "{{ cadvisor_system_user }}"
+certs_path: "/root/.docker"
+docker_data_dir: "/var/lib/docker"
+home_dir_cadvisor: "/home/cadvisor"
