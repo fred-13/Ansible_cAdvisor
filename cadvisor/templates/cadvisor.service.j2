@@ -3,7 +3,8 @@
 [Unit]
 Description=CAdvisor MonAgent
 Requires=cadvisor.service
-After=networking.service
+After=network.service
+After=docker.service
 
 [Service]
 User={{ cadvisor_system_user }}
