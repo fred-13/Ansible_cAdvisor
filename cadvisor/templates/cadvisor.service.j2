@@ -12,6 +12,7 @@ Group={{ cadvisor_system_group }}
 Restart=always
 {% if protect_docker_daemon_socket %}
 ExecStart=/bin/bash -c '{{ cadvisor_binary_dir }}/cadvisor \
+	--listen_ip="{{ cadvisor_listen_ip }}" \
 	--port={{ cadvisor_listen_port }} \
 	--docker="tcp://127.0.0.1:2376" \
 	--docker_only=true \
